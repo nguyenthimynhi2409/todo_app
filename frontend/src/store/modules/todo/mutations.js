@@ -12,4 +12,5 @@ export const mutations = {
     state.selectTodo = null;
   },
   [mutation_types.SELECT_TODO]: (state, todo) => (state.selectTodo = todo),
+  [mutation_types.UPDATE_INPUT]: (state, data) => (state.input = data),
 };

@@ -3,4 +3,5 @@ export const mutation_types = {
   REMOVE_TODO: "REMOVE_TODO",
   UPDATE_TODO: "UPDATE_TODO",
   SELECT_TODO: "SELECT_TODO",
+  UPDATE_INPUT: "UPDATE_INPUT",
 };

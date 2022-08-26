@@ -6,7 +6,7 @@
       </div>
       <div class="todos__add__item">
         <input
-          placeholder="Please enter your task"
+          placeholder="What needs to be done?"
           @keyup.enter="addNewTodo"
           v-model.trim="input"
         />
@@ -33,16 +33,32 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["addTodo", "updateTodo"]),
+    ...mapActions(["addTodo", "updateTodo", "editInput"]),
     addNewTodo() {
-      this.addTodo({
-        name: this.input,
-      });
-      this.input = "";
+      if (this.input || this.getInput) {
+        this.addTodo({
+          name: this.input,
+        });
+        this.input = "";
+      }
+    },
+    editTodo() {
+      if (this.input) {
+        this.updateTodo({
+          name: this.input,
+        });
+        this.editInput({ input: this.input });
+        this.getInput = "";
+      }
     },
   },
   computed: {
-    ...mapGetters(["getAllTodos"]),
+    ...mapGetters(["getAllTodos", "getInput"]),
+  },
+  watch: {
+    getInput() {
+      if (this.getInput) this.input = this.getInput;
+    },
   },
 };
 </script>

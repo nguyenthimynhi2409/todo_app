@@ -13,4 +13,7 @@ export const actions = {
   selectTodo({ commit }, todo) {
     commit(mutation_types.SELECT_TODO, todo);
   },
+  editInput({ commit }, data) {
+    commit(mutation_types.UPDATE_INPUT, data);
+  },
 };
