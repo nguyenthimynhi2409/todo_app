@@ -8,8 +8,7 @@ export const mutations = {
     const index = state.todos.findIndex((todo) => todo.id === newTodo.id);
     if (index !== -1) {
       state.todos.splice(index, 1, newTodo);
-    }
-    state.selectTodo = null;
+    } else state.todos[index] = newTodo;
   },
   [mutation_types.SELECT_TODO]: (state, todo) => (state.selectTodo = todo),
   [mutation_types.UPDATE_INPUT]: (state, data) => (state.input = data),

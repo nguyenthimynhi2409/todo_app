@@ -9,5 +9,8 @@ export const states = {
       name: "Learn Vuejs",
     },
   ],
-  input: "",
+  input: {
+    input: undefined,
+    id: undefined,
+  },
 };

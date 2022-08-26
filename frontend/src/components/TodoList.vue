@@ -16,7 +16,7 @@ export default {
 <style lang="scss">
 .todos__list {
   &__wrapper {
-    padding: 0 50px;
+    padding: 0 20px;
   }
   &__item {
     padding: 5px 0;
