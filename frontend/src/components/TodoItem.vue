@@ -1,7 +1,12 @@
 <template>
   <div class="todo__item__wrapper">
     <div class="left__side">
-      <input type="checkbox" @click="select" />
+      <input
+        type="checkbox"
+        @change="select"
+        :checked="this.todo.isSelected"
+        :id="this.todo.id"
+      />
       <span :title="todo.name">{{ todo.name }}</span>
     </div>
     <div class="right__side">
@@ -50,7 +55,6 @@ export default {
       this.deleteTodo(this.todo.id);
     },
     select() {
-      console.log("---------");
       this.selectTodo(this.todo.id);
     },
   },
