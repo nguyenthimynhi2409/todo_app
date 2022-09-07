@@ -1,6 +1,7 @@
 <template>
   <div class="todo__item__wrapper">
     <div class="left__side">
+      <input type="checkbox" @click="select" />
       <span :title="todo.name">{{ todo.name }}</span>
     </div>
     <div class="right__side">
@@ -28,7 +29,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["editInput", "deleteTodo"]),
+    ...mapActions(["editInput", "deleteTodo", "selectTodo"]),
     editTodo() {
       this.isShow = false;
       this.editInput({
@@ -47,6 +48,10 @@ export default {
         input: undefined,
       });
       this.deleteTodo(this.todo.id);
+    },
+    select() {
+      console.log("---------");
+      this.selectTodo(this.todo.id);
     },
   },
   computed: {
@@ -71,11 +76,18 @@ export default {
     display: flex;
     width: 70%;
     align-items: center;
+    gap: 5px;
+    input {
+      width: 20px;
+      height: 40px;
+      accent-color: #4dba87;
+    }
     span {
       display: inline;
       white-space: nowrap;
       text-overflow: ellipsis;
       overflow: hidden;
+      font-size: 13px;
     }
   }
   .right__side {
@@ -83,20 +95,22 @@ export default {
     justify-content: end;
     gap: 10px;
     width: 30%;
+    font-size: 13px;
     .btn {
       &__edit {
         padding: 10px;
-        width: 80px;
-        font-size: 15px;
+        width: 70px;
         background-color: aquamarine;
         border: none;
       }
       &__cancel {
+        padding: 10px;
         background-color: gray;
         color: white;
       }
       &__delete {
-        width: 80px;
+        width: 70px;
+        padding: 10px;
         background: red;
         border: none;
         color: white;

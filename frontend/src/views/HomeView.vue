@@ -16,9 +16,28 @@
           isError ? "Please enter your task" : ""
         }}</span>
       </div>
-      <div class="todos__list">
-        <TodoList :todos="getAllTodos" />
+      <div class="todos__progress-bar__wrapper">
+        <div class="todos__progress-bar" />
+        <div class="todos__progress-bar__action">
+          <span
+            >{{ filterTodos.length }}
+            {{ filterTodos.length > 1 ? "items" : "item" }} left</span
+          >
+          <div class="todos__progress-bar__action__right">
+            <button :class="active.all" @click="isActive('all')">ALL</button>
+            <button :class="active.active" @click="isActive('active')">
+              ACTIVE
+            </button>
+            <button :class="active.completed" @click="isActive('completed')">
+              COMPLETED
+            </button>
+          </div>
+        </div>
       </div>
+      <div class="todos__list">
+        <TodoList :todos="filterTodos" />
+      </div>
+      <button class="todos__delete">CLEAR COMPLETED</button>
     </div>
   </div>
 </template>
@@ -36,6 +55,11 @@ export default {
     return {
       input: "",
       isError: false,
+      active: {
+        all: "active",
+        active: false,
+        completed: false,
+      },
     };
   },
   methods: {
@@ -67,14 +91,36 @@ export default {
       if (this.getInput.input) this.editTodo();
       else this.addNewTodo();
     },
+    isActive(val) {
+      this.active = {
+        all: false,
+        active: false,
+        completed: false,
+      };
+      this.active[val] = "active";
+    },
   },
   computed: {
-    ...mapGetters(["getAllTodos", "getInput"]),
+    ...mapGetters([
+      "getAllTodos",
+      "getInput",
+      "filterActiveTodos",
+      "filterSelectedTodos",
+    ]),
+    filterTodos() {
+      console.log(this.getAllTodos);
+      if (this.active.active !== false) return this.filterActiveTodos;
+      if (this.active.completed !== false) return this.filterSelectedTodos;
+      return this.getAllTodos;
+    },
   },
   watch: {
     getInput() {
       if (this.getInput.input) this.input = this.getInput.input;
-      else this.input = "";
+      else {
+        this.input = "";
+        this.isError = false;
+      }
     },
     input(val) {
       if (this.getInput.input && val == "") {
@@ -83,6 +129,9 @@ export default {
         this.isError = false;
       }
     },
+  },
+  created() {
+    this.$store.dispatch("getAllTodos");
   },
 };
 </script>
@@ -107,7 +156,8 @@ export default {
       flex-direction: column;
       margin-bottom: 5px;
       input {
-        height: 20px;
+        background-color: white;
+        height: 30px;
         font-size: 14px;
         padding: 5px 5px 5px 15px;
         width: 312px;
@@ -119,6 +169,54 @@ export default {
       color: red;
       height: 18px;
     }
+    &__progress-bar {
+      height: 7px;
+      background-color: #4dba87;
+    }
+    &__progress-bar__wrapper {
+      height: 47px;
+    }
+    &__progress-bar__action {
+      display: flex;
+      justify-content: space-between;
+      margin-right: 40px;
+      height: 40px;
+      align-items: center;
+      span {
+        font-size: 13px;
+        color: #4dba87;
+        margin-left: 20px;
+      }
+      &__right {
+        display: flex;
+        gap: 5px;
+        .active {
+          background-color: #caeadb;
+          color: #4dba87 !important;
+        }
+        button {
+          padding: 0 5px;
+          color: #bbe5d1;
+          height: 30px;
+        }
+        button:hover {
+          color: #4dba87;
+          cursor: pointer;
+        }
+      }
+    }
+    &__delete {
+      margin-top: 10px;
+      width: 100%;
+      background-color: #4dba87;
+      border-radius: 20px;
+      height: 30px;
+      color: white;
+    }
+  }
+  button {
+    font-size: 13px;
+    font-weight: 500;
   }
 }
 </style>

@@ -10,6 +10,9 @@ export const mutations = {
       state.todos.splice(index, 1, newTodo);
     } else state.todos[index] = newTodo;
   },
-  [mutation_types.SELECT_TODO]: (state, todo) => (state.selectTodo = todo),
+  [mutation_types.SELECT_TODO]: (state, index) => {
+    state.todos[index].isSelected = !state.todos[index].isSelected;
+  },
   [mutation_types.UPDATE_INPUT]: (state, data) => (state.input = data),
+  [mutation_types.GET_ALL_TODO]: (state, data) => (state.todos = data),
 };
