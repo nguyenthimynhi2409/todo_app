@@ -5,11 +5,13 @@
         <h1>todos</h1>
       </div>
       <div class="todos__add__item">
-        <div class="todo__add__item__input">
+        <div class="todos__add__item__input">
+          <input type="checkbox" @change="select" class="todo__checkbox" />
           <input
             placeholder="What needs to be done?"
             @keyup.enter.exact="eventListener"
             v-model.trim="input"
+            class="todo__input"
           />
         </div>
         <span class="help__text">{{
@@ -17,7 +19,17 @@
         }}</span>
       </div>
       <div class="todos__progress-bar__wrapper">
-        <div class="todos__progress-bar" />
+        <div class="todos__progress-bar">
+          <div
+            class="todos__progress-bar__select"
+            :style="{
+              width: `${
+                (this.filterSelectedTodos.length / this.getAllTodos.length) *
+                100
+              }% !important`,
+            }"
+          ></div>
+        </div>
         <div class="todos__progress-bar__action">
           <span
             >{{ filterTodos.length }}
@@ -37,7 +49,9 @@
       <div class="todos__list">
         <TodoList :todos="filterTodos" />
       </div>
-      <button class="todos__delete">CLEAR COMPLETED</button>
+      <button class="todos__delete" @click="clearComplete">
+        CLEAR COMPLETED
+      </button>
     </div>
   </div>
 </template>
@@ -63,7 +77,13 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["addTodo", "updateTodo", "editInput"]),
+    ...mapActions([
+      "addTodo",
+      "updateTodo",
+      "editInput",
+      "clearCompleted",
+      "selectAllTodos",
+    ]),
     addNewTodo() {
       if (this.input || this.getInput.input || this.input !== "") {
         this.addTodo({
@@ -99,6 +119,16 @@ export default {
       };
       this.active[val] = "active";
     },
+    clearComplete() {
+      this.clearCompleted({
+        filterSelectedTodos: this.filterSelectedTodos,
+        filterActiveTodos: this.filterActiveTodos,
+      });
+    },
+    select(val) {
+      this.$store.state.selectAll = !this.$store.state.selectAll;
+      this.selectAllTodos(val.target.checked);
+    },
   },
   computed: {
     ...mapGetters([
@@ -108,7 +138,6 @@ export default {
       "filterSelectedTodos",
     ]),
     filterTodos() {
-      console.log(this.getAllTodos);
       if (this.active.active !== false) return this.filterActiveTodos;
       if (this.active.completed !== false) return this.filterSelectedTodos;
       return this.getAllTodos;
@@ -155,12 +184,34 @@ export default {
       display: flex;
       flex-direction: column;
       margin-bottom: 5px;
-      input {
-        background-color: white;
-        height: 30px;
-        font-size: 14px;
-        padding: 5px 5px 5px 15px;
-        width: 312px;
+      &__input {
+        display: flex;
+        width: 350px;
+        margin: auto;
+        background: white;
+
+        .todo {
+          &__input {
+            background-color: white;
+            height: 30px;
+            font-size: 14px;
+            padding: 5px 5px 5px 15px;
+            display: flex;
+            width: 320px;
+            &:focus-visible {
+              outline: none;
+            }
+          }
+          &__input:hover {
+            border: none;
+          }
+
+          &__checkbox {
+            accent-color: #4dba87;
+            margin-left: 10px;
+            width: 20px;
+          }
+        }
       }
     }
     .help__text {
@@ -171,7 +222,11 @@ export default {
     }
     &__progress-bar {
       height: 7px;
-      background-color: #4dba87;
+      background-color: #caeadb;
+      &__select {
+        height: 7px;
+        background-color: #4dba87;
+      }
     }
     &__progress-bar__wrapper {
       height: 47px;

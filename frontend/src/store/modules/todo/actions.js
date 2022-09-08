@@ -33,8 +33,17 @@ export const actions = {
     await todoApi.updateTodo(updateTodo);
     commit(mutation_types.UPDATE_TODO, updateTodo);
   },
+  async clearCompleted({ commit }, data) {
+    data.filterSelectedTodos.map(async (todo) => {
+      await todoApi.deleteTodo(todo.id);
+    });
+    commit(mutation_types.CLEAR_COMPLETED, data.filterActiveTodos);
+  },
   selectTodo({ commit }, id) {
     commit(mutation_types.SELECT_TODO, id);
+  },
+  selectAllTodos({ commit }, data) {
+    commit(mutation_types.SELECT_ALL_TODOS, data);
   },
   editInput({ commit }, data) {
     commit(mutation_types.UPDATE_INPUT, data);

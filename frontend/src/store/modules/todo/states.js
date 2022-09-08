@@ -4,4 +4,5 @@ export const states = {
     input: undefined,
     id: undefined,
   },
+  selectAll: false,
 };
