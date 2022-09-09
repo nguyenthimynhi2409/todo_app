@@ -64,12 +64,18 @@ export default {
   },
   watch: {
     todo() {
-      if (this.todo.name) this.isShow = !this.isShow;
+      if (this.getInput.input) this.isShow = !this.isShow;
     },
     getInput() {
       if (!!this.getInput.id && this.getInput.id !== this.todo.id)
         this.isShow = true;
     },
+    isShow() {
+      console.log(this.isShow);
+    },
+  },
+  destroyed() {
+    this.getInput.input = undefined;
   },
 };
 </script>
@@ -88,6 +94,8 @@ export default {
       accent-color: #4dba87;
     }
     span {
+      width: 365px;
+      text-align: start;
       display: inline;
       white-space: nowrap;
       text-overflow: ellipsis;
